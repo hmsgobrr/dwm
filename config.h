@@ -5,6 +5,7 @@
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
+static const int swallowfloating    = 0;
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayonleft = 0;   	/* 0: systray in the right corner, >0: systray on left of status text */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
@@ -12,8 +13,8 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
+static const char *fonts[]          = { "CaskaydiaMono Nerd Font Mono:size=10" };
+//static const char dmenufont[]       = "CaskaydiaMono Nerd Font Mono:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -64,11 +65,11 @@ static const Layout layouts[] = {
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+#define SHCMD(cmd) { .v = (const char*[]){ "/bin/zsh", "-c", cmd, NULL } }
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run_history", "-m", dmenumon, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_violet, "-sf", col_light, NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
 
 static const Key keys[] = {
@@ -108,12 +109,14 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_x,       quit,          {0} },
     { 0, XF86XK_MonBrightnessUp,                spawn,         {.v = (const char*[]){ "xbacklight", "-inc", "10", NULL } } },
     { 0, XF86XK_MonBrightnessDown,              spawn,         {.v = (const char*[]){ "xbacklight", "-dec", "10", NULL } } },
-    { 0, XF86XK_AudioRaiseVolume,                spawn,        SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%") },
-    { 0, XF86XK_AudioLowerVolume,                spawn,        SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%") }, 
-	{ MODKEY,                       XK_Left,     focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_Right,    focusstack,     {.i = -1 } }, 
-	{ MODKEY|ShiftMask,             XK_Left,     tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_Left,     tagmon,         {.i = +1 } },
+    { 0, XF86XK_AudioRaiseVolume,               spawn,         SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%") },
+    { 0, XF86XK_AudioLowerVolume,               spawn,         SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%") }, 
+	{ MODKEY,                       XK_Left,    focusstack,     {.i = +1 } },
+	{ MODKEY,                       XK_Right,   focusstack,     {.i = -1 } }, 
+	{ MODKEY|ShiftMask,             XK_Left,    tagmon,         {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_Left,    tagmon,         {.i = +1 } },
+    { MODKEY,                       XK_s,       spawn,          SHCMD("maim -s | xclip -selection clipboard -t image/png -i") },
+    { MODKEY|ShiftMask,             XK_s,       spawn,          SHCMD("\"maim -s /home/fish/ss/$(echo "" | dmenu -sb #474973)\"") }
 };
 
 /* button definitions */
